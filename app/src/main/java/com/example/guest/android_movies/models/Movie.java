@@ -1,8 +1,8 @@
 package com.example.guest.android_movies.models;
 
-/**
- * Created by Guest on 12/1/16.
- */
+import org.parceler.Parcel;
+
+@Parcel
 public class Movie {
     public String getmPoster() {
         return mPoster;
@@ -60,6 +60,14 @@ public class Movie {
         this.mVoteCount = mVoteCount;
     }
 
+    public int getmId() {
+        return mId;
+    }
+
+    public void setmId(int mId) {
+        this.mId = mId;
+    }
+
     private String mPoster;
     private boolean mAdult;
     private String mOverview;
@@ -67,15 +75,18 @@ public class Movie {
     private String mTitle;
     private int mVoteCount;
     private int mVoteAverage;
+    private int mId;
 
+    public Movie() {}
 
-    public Movie(String mPoster, boolean mAdult, String mOverview, String mDate, String mTitle, int mVoteCount, int mVoteAverage) {
-        this.mPoster = "https://image.tmdb.org/t/p/w500" + mPoster;
+    public Movie(String mPoster, boolean mAdult, String mOverview, String mDate, String mTitle, int mVoteCount, int mVoteAverage, int id) {
+        this.mPoster = mPoster;
         this.mAdult = mAdult;
         this.mOverview = mOverview;
         this.mDate = mDate;
         this.mTitle = mTitle;
         this.mVoteCount = mVoteCount;
         this.mVoteAverage = mVoteAverage;
+        this.mId = id;
     }
 }

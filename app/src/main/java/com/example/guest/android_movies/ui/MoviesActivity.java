@@ -1,5 +1,6 @@
 package com.example.guest.android_movies.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +32,14 @@ public class MoviesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
         ButterKnife.bind(this);
-        getMovies("Elf");
+        Intent intent = getIntent();
+        String title = intent.getStringExtra("title");
+        if (!title.equals("")) {
+            getMovies(title);
+        } else {
+            getMovies();
+        }
+
     }
 
     private void getMovies(String title) {
@@ -47,16 +55,42 @@ public class MoviesActivity extends AppCompatActivity {
                 mMovies = movieService.processResults(response);
 
                 MoviesActivity.this.runOnUiThread(new Runnable() {
-                  @Override
-                  public void run() {
-                    mAdapter = new MovieListAdapter(getApplicationContext(), mMovies);
-                    mRecyclerView.setAdapter(mAdapter);
-                      RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesActivity.this);
-                      mRecyclerView.setLayoutManager(layoutManager);
-                      mRecyclerView.setHasFixedSize(true);
-                  }
+                    @Override
+                    public void run() {
+                        mAdapter = new MovieListAdapter(getApplicationContext(), mMovies);
+                        mRecyclerView.setAdapter(mAdapter);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesActivity.this);
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        mRecyclerView.setHasFixedSize(true);
+                    }
                 });
-             }
+            }
+        });
+    }
+
+    private void getMovies() {
+        final MovieService movieService = new MovieService();
+        movieService.findMovies(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                mMovies = movieService.processResults(response);
+
+                MoviesActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter = new MovieListAdapter(getApplicationContext(), mMovies);
+                        mRecyclerView.setAdapter(mAdapter);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesActivity.this);
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        mRecyclerView.setHasFixedSize(true);
+                    }
+                });
+            }
         });
     }
 }

@@ -17,9 +17,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by Guest on 12/1/16.
- */
 public class MovieService {
 
     public static void findMovies(String title, Callback callback) {
@@ -28,6 +25,19 @@ public class MovieService {
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.MOVIE_API_BASE_URL).newBuilder();
         urlBuilder.addQueryParameter(Constants.SEARCH_QUERY, title);
+        urlBuilder.addQueryParameter(Constants.API_KEY_QUERY, Constants.API_KEY);
+        String url = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(url).build();
+
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void findMovies(Callback callback) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.TOP_MOVIE_API_BASE_URL).newBuilder();
         urlBuilder.addQueryParameter(Constants.API_KEY_QUERY, Constants.API_KEY);
         String url = urlBuilder.build().toString();
         Request request = new Request.Builder().url(url).build();
@@ -46,14 +56,20 @@ public class MovieService {
                 JSONArray moviesJSON = moviedbJSON.getJSONArray("results");
                 for (int i = 0; i < moviesJSON.length(); i++) {
                     JSONObject movieJSON = moviesJSON.getJSONObject(i);
-                    String poster = movieJSON.optString("poster_path", "/gwMjlA6R86hgPkUInaxXalPJKkw.jpg");
+                    String poster = movieJSON.getString("poster_path");
                     boolean adult = movieJSON.getBoolean("adult");
                     String overview = movieJSON.getString("overview");
                     String date = movieJSON.getString("release_date");
                     String title = movieJSON.getString("title");
                     int voteCount = movieJSON.getInt("vote_count");
                     int voteAverage = movieJSON.getInt("vote_average");
-                    Movie movie = new Movie(poster, adult, overview, date, title, voteCount, voteAverage);
+                    int id = movieJSON.getInt("id");
+                    if (poster.equals("null")) {
+                        poster = "http://www.interlog.com/~tfs/images/posters/TFSMoviePosterUnavailable.jpg";
+                    }else{
+                        poster = "https://image.tmdb.org/t/p/w500" + poster;
+                    }
+                    Movie movie = new Movie(poster, adult, overview, date, title, voteCount, voteAverage, id);
                     movies.add(movie);
                 }
             }
