@@ -16,10 +16,21 @@ You will need [Android Studio](https://developer.android.com/studio/index.html) 
 * Open Android Studio.
 * Select 'Open an existing Android Studio project' and find the cloned repository.
 
+## Setup
+
+Requesting an API Key:
+* Sign up or login to your [The Movie Database](https://www.themoviedb.org) account.
+* You can apply for an API key by clicking the 'API' link from the left hand sidebar within your account page. 
+
+In Android Studio:
+* Create a file called `gradle.properties` in the root directory of the project.
+* Save the API key in this new file, setting it equal to `ApiKey = "<your key goes here>"` .
+
 ## Running / Development
 
-* Create a virtual device in Android studio and run the application.
-* Or connect an android device to your computer and run the application on the device.
+* Create a virtual device in Android Studio and run the application.
+<br>- OR -
+* Connect an Android device to your computer and run the application on the device.
 
 ## Support and Contact Details
 
